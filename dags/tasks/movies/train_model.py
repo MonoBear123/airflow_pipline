@@ -87,3 +87,6 @@ def train():
         joblib.dump(power_trans, DATA_BASE / "output/movie/power_trans_movies.skops")
 
 
+train()
+
+
