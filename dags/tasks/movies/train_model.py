@@ -83,7 +83,7 @@ def train():
         mlflow.sklearn.log_model(best, name="sgd_model", signature=signature)
         
         output = DATA_BASE / "output/movie"
-        output.mkdir(exist_ok=True)
+        output.mkdir(parents=True, exist_ok=True)
         joblib.dump(best, DATA_BASE / "sgd_movies.skops")
         joblib.dump(scaler, DATA_BASE / "scaler_movies.skops")
         joblib.dump(power_trans, DATA_BASE / "power_trans_movies.skops")
