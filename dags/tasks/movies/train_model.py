@@ -81,10 +81,12 @@ def train():
         mlflow.log_metrics(metrics)
         signature = infer_signature(X_train, best.predict(X_train))
         mlflow.sklearn.log_model(best, name="sgd_model", signature=signature)
-
-        joblib.dump(best, DATA_BASE / "output/movie/sgd_movies.skops")
-        joblib.dump(scaler, DATA_BASE / "output/movie/scaler_movies.skops")
-        joblib.dump(power_trans, DATA_BASE / "output/movie/power_trans_movies.skops")
+        
+        output = DATA_BASE / "output/movie"
+        output.mkdir(exist_ok=True)
+        joblib.dump(best, DATA_BASE / "sgd_movies.skops")
+        joblib.dump(scaler, DATA_BASE / "scaler_movies.skops")
+        joblib.dump(power_trans, DATA_BASE / "power_trans_movies.skops")
 
 
 train()
