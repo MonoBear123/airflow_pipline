@@ -14,8 +14,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
-DATA_BASE = Path("/home/gintoki/airflow/data")
-MLRUNS = Path("/home/gintoki/airflow/mlruns")
+DATA_BASE = Path("data")
+MLRUNS = Path("mlruns")
 
 
 def scale_frame(df):
