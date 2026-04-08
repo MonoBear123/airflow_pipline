@@ -76,6 +76,7 @@ def train():
         y_val_orig = power_trans.inverse_transform(y_val.reshape(-1, 1))
 
         metrics = eval_metrics(y_val_orig, y_pred)
+
         mlflow.log_params(clf.best_params_)
         mlflow.log_metrics(metrics)
         signature = infer_signature(X_train, best.predict(X_train))
@@ -86,4 +87,3 @@ def train():
         joblib.dump(power_trans, DATA_BASE / "output/movie/power_trans_movies.skops")
 
 
-train()
