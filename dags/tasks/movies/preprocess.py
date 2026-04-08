@@ -98,3 +98,6 @@ def clear_data():
     df.write_csv(DATA_BASE / "processed/movie/movies.csv")
 
     return True
+
+
+clear_data()
