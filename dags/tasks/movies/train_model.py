@@ -62,7 +62,7 @@ def train():
         "fit_intercept": [False, True],
     }
 
-    mlflow.set_tracking_uri(f"file://{MLRUNS}")
+    mlflow.set_tracking_uri(f"./{MLRUNS}")
     mlflow.set_experiment("movies_sgd")
     with mlflow.start_run(run_name="SGDRegressor"):
         lr = SGDRegressor(random_state=42, max_iter=5000)
