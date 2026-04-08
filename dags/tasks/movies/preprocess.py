@@ -4,7 +4,7 @@ import numpy as np
 from pathlib import Path
 from sklearn.preprocessing import MultiLabelBinarizer
 
-DATA_BASE = Path("/home/gintoki/airflow/data")
+DATA_BASE = Path("data")
 
 
 def encoding(df, col_source, col_out):
