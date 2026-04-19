@@ -1,6 +1,7 @@
 import numpy as np
 import polars as pl
 import mlflow
+from catboost import CatBoostRegressor
 from pathlib import Path
 from sklearn.model_selection import GridSearchCV
 from mlflow.models import infer_signature
@@ -60,7 +61,8 @@ def train():
     }
 
     mlflow.set_tracking_uri(f"./{MLRUNS}")
-    mlflow.set_experiment("movies_sgd")
+    mlflow.set_experiment("movies_cbr")
+
     with mlflow.start_run(run_name="CatRegressor"):
         lr = CatBoostRegressor(
             loss_function="RMSE", eval_metric="RMSE", random_state=42, verbose=100
@@ -87,19 +89,7 @@ def train():
         mlflow.log_params(clf.best_params_)
         mlflow.log_metrics(metrics)
         signature = infer_signature(X_train, best.predict(X_train))
-        mlflow.sklearn.log_model(best, name="sgd_model", signature=signature)
-
-        output = DATA_BASE / "output/movie"
-        output.mkdir(parents=True, exist_ok=True)
-        joblib.dump(best, DATA_BASE / "sgd_movies.skops")
-        joblib.dump(scaler, DATA_BASE / "scaler_movies.skops")
-        joblib.dump(power_trans, DATA_BASE / "power_trans_movies.skops")
-
-        output = DATA_BASE / "output/movie"
-        output.mkdir(exist_ok=True)
-        joblib.dump(best, DATA_BASE / "sgd_movies.skops")
-        joblib.dump(scaler, DATA_BASE / "scaler_movies.skops")
-        joblib.dump(power_trans, DATA_BASE / "power_trans_movies.skops")
+        mlflow.catboost.log_model(best, name="cbr_model", signature=signature)
 
 
 train()
