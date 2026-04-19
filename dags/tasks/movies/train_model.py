@@ -1,10 +1,8 @@
 import numpy as np
 import polars as pl
-import joblib
 import mlflow
 from pathlib import Path
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import SGDRegressor
 from mlflow.models import infer_signature
 from sklearn.preprocessing import (
     StandardScaler,
@@ -55,19 +53,28 @@ def train():
     X_train, X_val, y_train, y_val, scaler, power_trans = scale_frame(df)
 
     params = {
-        "alpha": [0.0001, 0.001, 0.01, 0.05, 0.1],
-        "l1_ratio": [0.001, 0.01, 0.05, 0.2],
-        "penalty": ["l1", "l2", "elasticnet"],
-        "loss": ["squared_error", "huber", "epsilon_insensitive"],
-        "fit_intercept": [False, True],
+        "depth": [4, 6, 8],
+        "learning_rate": [0.03, 0.05, 0.1],
+        "iterations": [300, 500, 800],
+        "l2_leaf_reg": [1, 3, 5],
     }
 
     mlflow.set_tracking_uri(f"./{MLRUNS}")
     mlflow.set_experiment("movies_sgd")
-    with mlflow.start_run(run_name="SGDRegressor"):
-        lr = SGDRegressor(random_state=42, max_iter=5000)
-        clf = GridSearchCV(lr, params, cv=3, n_jobs=4, scoring="r2")
-        clf.fit(X_train, y_train)
+    with mlflow.start_run(run_name="CatRegressor"):
+        lr = CatBoostRegressor(
+            loss_function="RMSE", eval_metric="RMSE", random_state=42, verbose=100
+        )
+        clf = GridSearchCV(
+            lr, params, cv=3, n_jobs=1, scoring="neg_root_mean_squared_error"
+        )
+        clf.fit(
+            X_train,
+            y_train,
+            eval_set=(X_val, y_val),
+            use_best_model=True,
+            early_stopping_rounds=100,
+        )
 
         best = clf.best_estimator_
 
