@@ -14,7 +14,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
 DATA_BASE = Path("data")
-MLRUNS = Path("file:///var/lib/jenkins/mlruns")
+MLRUNS = Path("mlruns")
 
 
 def scale_frame(df):
