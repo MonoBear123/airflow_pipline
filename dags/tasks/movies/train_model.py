@@ -91,5 +91,11 @@ def train():
         signature = infer_signature(X_train, best.predict(X_train))
         mlflow.catboost.log_model(best, name="cbr_model", signature=signature)
 
+        run_id = mlflow.active_run().info.run_id
+        model_uri = f"runs:/{run_id}/cbr_model"
+
+        with open("best_model.txt", "w") as f:
+            f.write(model_uri)
+
 
 train()
